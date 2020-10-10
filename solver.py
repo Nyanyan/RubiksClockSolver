@@ -1,4 +1,5 @@
 # coding:utf-8
+'''TO TEST THIS CODE, PLEASE EXECUTE TEST_SCRAMBLE.PY OR TEST_STATISTICS.PY'''
 '''
 clock numbering
 
@@ -24,6 +25,7 @@ upper
 from basic_functions import *
 from copy import deepcopy
 
+# Returns distances from solved state
 def distance(phase, state):
     lower_idx, upper_idx, corner_idx = state2idx(state)
     if phase == 0:
@@ -33,6 +35,7 @@ def distance(phase, state):
     else:
         return corner_cost[corner_idx], 0
 
+# Search the phase solution
 def search(phase, depth, state, strt_idx):
     global solution
     solved_solution = []
@@ -63,6 +66,7 @@ def search(phase, depth, state, strt_idx):
             solution.pop()
     return solved_solution
 
+# Search the best solution
 def solver_p(phase, state, pre_solution, pre_cost):
     global solution
     dis, n_dis = distance(phase, state)
@@ -87,10 +91,9 @@ def solver_p(phase, state, pre_solution, pre_cost):
                 states.append(n_state)
                 res.append([depth, n_next_cost, n_state, solution_candidate])
             break
-    #print('done', phase, len(res))
-    #print(res[0])
     return res
 
+# The main part
 def solver(state):
     cost = 0
     all_solution = []
@@ -121,13 +124,13 @@ def solver(state):
 
 solution = []
 
+# Tables for prunning
 with open('cross_cost.csv', mode='r') as f:
     cross_cost = [int(i) for i in f.readline().replace('\n', '').split(',')]
 with open('corner_cost.csv', mode='r') as f:
     corner_cost = [int(i) for i in f.readline().replace('\n', '').split(',')]
 
 print('solver initialized')
-
 
 '''
 from time import time
