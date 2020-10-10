@@ -46,7 +46,7 @@ def search(phase, depth, state, strt_idx):
         for twist in range(1, 12):
             n_state = move(state, pin_num, twist)
             n_dis, n_next_dis = distance(phase, n_state)
-            if n_dis > dis:
+            if n_dis >= dis:
                 continue
             solution.append([pin_num, twist])
             if phase == 2: # Only 1 solution is needed in phase 2
@@ -91,6 +91,7 @@ def solver_p(phase, state, pre_solution, pre_cost):
                 states.append(n_state)
                 res.append([depth, n_next_cost, n_state, solution_candidate])
             break
+    #print(phase, len(res))
     return res
 
 # The main part
