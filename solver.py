@@ -117,7 +117,7 @@ def solver(state):
             twist = twist - 12
         twist_str = str(twist)
         chosen_solution_notation[i] = pins_str + ' ' + ud_str + ' ' + twist_str
-    return chosen_solution_notation #, chosen_cost
+    return chosen_solution_notation
 
 solution = []
 
@@ -129,14 +129,14 @@ with open('corner_cost.csv', mode='r') as f:
 print('solver initialized')
 
 
-from time import time
 '''
+from time import time
 from random import randint
 tims = []
 lens = []
 scrambles = []
 cnt = 0
-num = 100 #100000
+num = 1000 #100000
 for i in range(num):
     strt = time()
     test_cube = [randint(0, 11) for _ in range(14)]
@@ -153,7 +153,7 @@ print(cnt, '/', num)
 print('avg', sum(tims) / cnt, 'sec', 'max', max(tims), 'sec')
 print('avg', sum(lens) / cnt, 'moves', 'max', max(lens), 'moves')
 print('longest time scramble', scrambles[tims.index(max(tims))])
-'''
+
 strt = time()
 tmp = solver([6, 6, 7, 1, 0, 10, 11, 8, 7, 1, 4, 2, 10, 8])
 #tmp = solver([11, 10, 6, 4, 4, 2, 11, 2, 3, 3, 7, 6, 7, 4])
@@ -165,7 +165,9 @@ tmp = solver([6, 6, 7, 1, 0, 10, 11, 8, 7, 1, 4, 2, 10, 8])
 #tmp = solver([2, 9, 5, 11, 0, 4, 9, 6, 4, 3, 9, 10, 7, 6])
 #tmp = solver([6, 3, 1, 3, 3, 3, 7, 3, 6, 6, 8, 1, 9, 2]) # skip
 #tmp = solver([6, 7, 10, 9, 1, 4, 5, 1, 7, 2, 1, 2, 2, 10])
+#print('scramble: UR3- DR5- DL0+ UL3- U3+ R3- D1+ L2- ALL6+ y2 U3- R3+ D5+ L1+ ALL2- DR DL UL')
 #tmp = solver([5, 11, 6, 1, 4, 3, 5, 7, 1, 10, 5, 6, 11, 9]) # UR3- DR5- DL0+ UL3- U3+ R3- D1+ L2- ALL6+ y2 U3- R3+ D5+ L1+ ALL2- DR DL UL
 print(len(tmp), 'moves', ' / '.join(tmp), time() - strt)
 #print(solver([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 0, 0]))
 #print(solver([9, 3, 3, 0, 3, 3, 9, 0, 9, 3, 3, 3, 3, 3]))
+'''
