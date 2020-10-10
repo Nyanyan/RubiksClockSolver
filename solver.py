@@ -31,7 +31,7 @@ def distance(phase, state):
     elif phase == 1:
         return cross_cost[upper_idx], corner_cost[corner_idx]
     else:
-        return corner_cost[corner_idx], -1
+        return corner_cost[corner_idx], 0
 
 def search(phase, depth, state, strt_idx):
     global solution
@@ -46,14 +46,14 @@ def search(phase, depth, state, strt_idx):
             if n_dis > dis:
                 continue
             solution.append([pin_num, twist])
-            if phase == 2:
+            if phase == 2: # Only 1 solution is needed in phase 2
                 if n_dis == 0:
                     return [[[[i for i in j] for j in solution], 0]]
                 elif n_dis <= n_depth:
                     tmp = search(phase, n_depth, n_state, n_strt_idx)
                     if tmp:
                         return tmp
-            else:
+            else: # Check all solutions in phase 0 & 1
                 if n_dis == 0:
                     solved_solution.append([[[i for i in j] for j in solution], n_next_dis])
                 elif n_dis <= n_depth:
@@ -71,14 +71,11 @@ def solver_p(phase, state, pre_solution, pre_cost):
     strt = len(pre_solution)
     res = []
     max_cost = 13
-    #print(state)
-    for depth in range(1, max_cost):
+    for depth in range(1, max_cost - pre_cost):
         solution = [[i for i in j] for j in pre_solution]
         #print(phase, depth)
         solutions = search(phase, depth, state, 0)
         if solutions:
-            #solutions.sort(key=lambda x: x[1] + x[2])
-            #print(len(solutions))
             #print(phase, depth)
             states = []
             for solution_candidate, n_next_cost in solutions:
@@ -110,8 +107,6 @@ def solver(state):
             states = [deepcopy(n_states[0])]
             n_states = []
     chosen_solution = n_states[0][3]
-    chosen_cost = n_states[0][0]
-    #print(chosen_solution)
     chosen_solution.sort()
     chosen_solution_notation = [[pins_candidate[i[0]][0], pins_candidate[i[0]][1], i[1]] for i in chosen_solution]
     for i, arr in enumerate(chosen_solution_notation):
@@ -122,7 +117,7 @@ def solver(state):
             twist = twist - 12
         twist_str = str(twist)
         chosen_solution_notation[i] = pins_str + ' ' + ud_str + ' ' + twist_str
-    return chosen_solution_notation, chosen_cost
+    return chosen_solution_notation #, chosen_cost
 
 solution = []
 
@@ -139,30 +134,28 @@ from time import time
 from random import randint
 tims = []
 lens = []
-costs = []
 scrambles = []
 cnt = 0
-num = 1000 #100000
+num = 100 #100000
 for i in range(num):
     strt = time()
     test_cube = [randint(0, 11) for _ in range(14)]
     with open('log.txt', mode='a') as f:
         f.write(str(test_cube) + '\n')
-    res, cost = solver(test_cube)
+    res = solver(test_cube)
     tim = time() - strt
-    print(i, len(res), 'moves', cost, 'cost', tim, 'sec')
+    print(i, len(res), 'moves', tim, 'sec')
     tims.append(tim)
     lens.append(len(res))
-    costs.append(cost)
     scrambles.append(test_cube)
     cnt += 1
 print(cnt, '/', num)
 print('avg', sum(tims) / cnt, 'sec', 'max', max(tims), 'sec')
 print('avg', sum(lens) / cnt, 'moves', 'max', max(lens), 'moves')
-print('avg', sum(costs) / cnt, 'cost', 'max', max(costs), 'cost')
 print('longest time scramble', scrambles[tims.index(max(tims))])
 '''
 strt = time()
+tmp = solver([6, 6, 7, 1, 0, 10, 11, 8, 7, 1, 4, 2, 10, 8])
 #tmp = solver([11, 10, 6, 4, 4, 2, 11, 2, 3, 3, 7, 6, 7, 4])
 #tmp = solver([8, 2, 2, 8, 6, 4, 2, 9, 2, 6, 10, 5, 0, 4])
 #tmp = solver([10, 2, 8, 4, 8, 1, 2, 2, 7, 3, 9, 1, 10, 3])
@@ -172,7 +165,7 @@ strt = time()
 #tmp = solver([2, 9, 5, 11, 0, 4, 9, 6, 4, 3, 9, 10, 7, 6])
 #tmp = solver([6, 3, 1, 3, 3, 3, 7, 3, 6, 6, 8, 1, 9, 2]) # skip
 #tmp = solver([6, 7, 10, 9, 1, 4, 5, 1, 7, 2, 1, 2, 2, 10])
-tmp = solver([5, 11, 6, 1, 4, 3, 5, 7, 1, 10, 5, 6, 11, 9]) # UR3- DR5- DL0+ UL3- U3+ R3- D1+ L2- ALL6+ y2 U3- R3+ D5+ L1+ ALL2- DR DL UL
-print(len(tmp[0]), 'moves', ' / '.join(tmp[0]), tmp[1], time() - strt)
+#tmp = solver([5, 11, 6, 1, 4, 3, 5, 7, 1, 10, 5, 6, 11, 9]) # UR3- DR5- DL0+ UL3- U3+ R3- D1+ L2- ALL6+ y2 U3- R3+ D5+ L1+ ALL2- DR DL UL
+print(len(tmp), 'moves', ' / '.join(tmp), time() - strt)
 #print(solver([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 0, 0]))
 #print(solver([9, 3, 3, 0, 3, 3, 9, 0, 9, 3, 3, 3, 3, 3]))
