@@ -62,17 +62,15 @@ def idx2state(idx_lower, idx_upper, idx_corner):
         idx_corner //= 12
     return res
 
-grip_cost = 3
-
 pins_candidate = [
-    [[False, False, False, False], 0], [[False, False, False, False], 1],
+    [[False, False, False, False], 0], 
     [[True, False, False, False], 0], [[True, False, False, False], 1], [[False, True, False, False], 0], [[False, True, False, False], 1], [[False, False, True, False], 0], [[False, False, True, False], 1], [[False, False, False, True], 0], [[False, False, False, True], 1], 
     [[True, True, False, False], 0], [[True, True, False, False], 1], [[True, False, True, False], 0], [[True, False, True, False], 1], [[True, False, False, True], 0], [[True, False, False, True], 1], [[False, True, True, False], 0], [[False, True, True, False], 1], [[False, True, False, True], 0], [[False, True, False, True], 1], [[False, False, True, True], 0], [[False, False, True, True], 1], 
     [[True, True, True, False], 0], [[True, True, True, False], 1], [[True, True, False, True], 0], [[True, True, False, True], 1], [[True, False, True, True], 0], [[True, False, True, True], 1], [[False, True, True, True], 0], [[False, True, True, True], 1], 
-    [[True, True, True, True], 0], [[True, True, True, True], 1]
+    [[True, True, True, True], 1]
     ]
 
-pins_num_candidate = [[10, 12, 18, 20, 22, 24, 26, 28], [3, 5, 7, 9, 11, 13, 19, 21], [0, 2, 4, 6, 8, 14, 16, 15, 16, 23, 25, 27, 29, 31]]
+pins_num_candidate = [[9, 11, 17, 19, 21, 23, 25, 27], [2, 4, 6, 8, 10, 12, 18, 20], [0, 1, 3, 5, 7, 13, 15, 14, 15, 22, 24, 26, 28, 29]]
 set_pins_num_candidate = [set(i) for i in pins_num_candidate]
 
 print('basic functions initialized')
