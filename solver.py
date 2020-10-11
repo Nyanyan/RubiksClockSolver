@@ -75,22 +75,22 @@ def solver_p(phase, state, pre_solution, pre_cost):
     strt = len(pre_solution)
     res = []
     max_cost = 13
-    for depth in range(1, max_cost - pre_cost):
-        solution = [[i for i in j] for j in pre_solution]
+    depth = dis
+    solution = [[i for i in j] for j in pre_solution]
+    #print(phase, depth)
+    solutions = search(phase, depth, state, 0)
+    if solutions:
         #print(phase, depth)
-        solutions = search(phase, depth, state, 0)
-        if solutions:
-            #print(phase, depth)
-            states = []
-            for solution_candidate, n_next_cost in solutions:
-                n_state = [i for i in state]
-                for pin_num, twist in solution_candidate[strt:]:
-                    n_state = move(n_state, pin_num, twist)
-                if n_state in states:
-                    continue
-                states.append(n_state)
-                res.append([depth, n_next_cost, n_state, solution_candidate])
-            break
+        states = []
+        for solution_candidate, n_next_cost in solutions:
+            n_state = [i for i in state]
+            for pin_num, twist in solution_candidate[strt:]:
+                n_state = move(n_state, pin_num, twist)
+            if n_state in states:
+                continue
+            states.append(n_state)
+            res.append([depth, n_next_cost, n_state, solution_candidate])
+        #break
     #print(phase, len(res))
     return res
 
