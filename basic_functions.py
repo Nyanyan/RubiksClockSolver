@@ -56,7 +56,7 @@ def idx2state(idx_lower, idx_upper, idx_corner):
     for i in (13, 12, 11, 10, 9):
         res[i] = idx_lower % 12
         idx_lower //= 12
-    idx_corner //= 12 ** 2
+    idx_corner //= 144
     for i in (8, 7, 6, 5):
         res[i] = idx_corner % 12
         idx_corner //= 12

@@ -35,7 +35,10 @@ def distance_phase2(state_idx):
 
 def move_idx(phase, state_idx, pin_num, twist):
     idx = pins_num_candidate[phase].index(pin_num)
-    return cross_trans[state_idx][idx * 11 + twist - 1]
+    if phase < 2:
+        return cross_trans[state_idx][idx * 11 + twist - 1]
+    else:
+        return corner_trans[state_idx][idx * 11 + twist - 1]
 
 # Search the phase solution in phase0 & 1
 def search_phase01(phase, depth, state_idx, strt_idx):
@@ -49,7 +52,7 @@ def search_phase01(phase, depth, state_idx, strt_idx):
             twist_proc = twist if phase == 0 else (-twist) % 12
             n_state_idx = move_idx(phase, state_idx, pin_num, twist_proc)
             n_dis = distance_phase01(n_state_idx)
-            if n_dis >= dis:
+            if n_dis >= dis or n_dis > depth:
                 continue
             phase_solution.append([pin_num, twist])
             if n_dis == 0:
@@ -72,9 +75,12 @@ def search_phase2(depth, state_idx, strt_idx):
     state_idx //= 12
     upper_idx = state_idx % 12
     state_idx //= 12
-    for pin_idx, pin_num in enumerate(pins_num_candidate[phase][strt_idx:]):
+    for pin_idx, pin_num in enumerate(pins_num_candidate[phase]):
         n_strt_idx = strt_idx + pin_idx + 1
+        #if upper_idx == 0 and lower_idx == 3 and pin_num == 13 and idx2state(0, 0, state_idx * 144) == [0, 0, 0, 0, 0, 0, 9, 9, 0, 0, 0, 0, 0, 0]:
+        #    print('aaaa', strt_idx, pin_num)
         for twist in range(1, 12):
+            twist_proc = twist if phase == 0 else (-twist) % 12
             n_upper_idx = upper_idx
             n_lower_idx = lower_idx
             if pins_candidate[pin_num][1]:
@@ -83,10 +89,14 @@ def search_phase2(depth, state_idx, strt_idx):
             else:
                 n_lower_idx -= twist
                 n_lower_idx %= 12
-            n_state_idx = corner_trans[state_idx][pin_idx * 11 + twist - 1] * 144 + n_upper_idx * 12 + n_lower_idx
+            n_state_idx = move_idx(phase, state_idx, pin_num, twist_proc) * 144 + n_upper_idx * 12 + n_lower_idx
             n_dis = distance_phase2(n_state_idx)
-            if n_dis >= dis:
+            if pin_num == 13 and twist == 3 and upper_idx == 0 and lower_idx == 3 and idx2state(0, 0, state_idx * 144) == [0, 0, 0, 0, 0, 0, 9, 9, 0, 0, 0, 0, 0, 0]:
+                print('a', upper_idx, lower_idx, (n_state_idx // 12) % 12, (n_state_idx % 12), idx2state(0, 0, n_state_idx), n_strt_idx)
+            if n_dis >= dis or n_dis > depth:
                 continue
+            if n_dis == 1:
+                print((n_state_idx // 12) % 12, (n_state_idx % 12), idx2state(0, 0, n_state_idx), n_strt_idx)
             phase_solution.append([pin_num, twist])
             if n_dis == 0:
                 return [[[i for i in j] for j in phase_solution]]
@@ -106,17 +116,18 @@ def solver(problem_state):
     n_states = []
     for phase in range(2):
         min_ln = states[0][0]
-        min_depth = 6
+        min_depth = 7
         for ln, state_idxes, pre_solution in states:
             if ln > min_ln:
                 break
             state_idx = state_idxes[phase]
+            solutions = []
             for depth in range(min_depth):
                 phase_solution = []
                 solutions = search_phase01(phase, depth, state_idx, 0)
                 if solutions:
-                    if depth + 2 < min_depth:
-                        min_depth = depth + 2
+                    if depth + 1 < min_depth:
+                        min_depth = depth + 1
                     break
             for solution in solutions:
                 n_state = idx2state(state_idxes[0], state_idxes[1], state_idxes[2])
@@ -138,11 +149,12 @@ def solver(problem_state):
 
     phase = 2
     min_ln = states[0][0]
-    min_depth = 6
+    min_depth = 7
     for ln, state_idxes, pre_solution in states:
         if ln > min_ln:
             break
-        for depth in range(13):
+        solutions = []
+        for depth in range(min_depth):
             solutions = search_phase2(depth, state_idxes[2], 0)
             if solutions:
                 if depth < min_depth:
@@ -188,5 +200,6 @@ print('solver initialized')
 
 
 ''' TEST '''
-tmp = solver([6, 3, 10, 10, 6, 1, 5, 2, 7, 6, 3, 5, 7, 4]) #UR3- DR3- DL2+ UL3+ U1+ R4- D0+ L5+ ALL4+ y2 U4+ R5- D4+ L0+ ALL5- UR DL
+#tmp = solver([6, 3, 10, 10, 6, 1, 5, 2, 7, 6, 3, 5, 7, 4]) #UR3- DR3- DL2+ UL3+ U1+ R4- D0+ L5+ ALL4+ y2 U4+ R5- D4+ L0+ ALL5- UR DL
+tmp = solver([10, 1, 7, 9, 3, 2, 2, 5, 8, 9, 6, 8, 1, 6]) # UR5+ DR3+ DL0+ UL5+ U4+ R6+ D4- L2+ ALL1- y2 U4+ R6+ D3- L2- ALL2+ DR
 print(len(tmp), 'moves', ' / '.join(tmp))
