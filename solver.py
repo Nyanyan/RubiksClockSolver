@@ -87,11 +87,11 @@ def search_phase2(depth, state, strt_idx):
     return solved_solution
 
 # The main part
-def solver(state):
+def solver(problem_state):
     global phase_solution
     cost = 0
     solution = []
-    states = [[0, state2idx(state), []]]
+    states = [[0, state2idx(problem_state), []]]
     n_states = []
     for phase in range(2):
         min_ln = states[0][0]
@@ -111,13 +111,19 @@ def solver(state):
                 n_state = idx2state(state_idxes[0], state_idxes[1], state_idxes[2])
                 for pin_num, twist in solution:
                     n_state = move(n_state, pin_num, twist)
+                #print(n_state)
                 n_solution = [[i for i in j] for j in pre_solution]
                 n_solution.extend(solution)
-                n_states.append([len(n_solution), state2idx(n_state), n_solution])
+                n_idxes = state2idx(n_state)
+                if phase == 0:
+                    plus_cost = max(cross_cost[n_idxes[1]], corner_cost[n_idxes[2]])
+                else:
+                    plus_cost = corner_cost[n_idxes[2]]
+                n_states.append([len(n_solution) + plus_cost, n_idxes, n_solution])
         states = deepcopy(n_states)
         states.sort()
         n_states = []
-        print(phase, len(states), len(states[0][2]))
+        #print(phase, len(states), len(states[0][2]))
 
     phase = 2
     min_ln = states[0][0]
@@ -136,7 +142,7 @@ def solver(state):
             n_solution = [[i for i in j] for j in pre_solution]
             n_solution.extend(solution)
             n_states.append([len(n_solution), n_solution])
-    print(phase, len(n_states), len(n_states[0][1]))
+    #print(phase, len(n_states), len(n_states[0][1]))
     
     n_states.sort()
     chosen_solution = n_states[0][1]
