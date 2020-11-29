@@ -9,7 +9,7 @@ Rubik's Clock Solver written in Python
 $ python create_array.py
 ```
 
-Please wait few minutes.
+Please wait few minutes. Four CSV files are created.
 
 ### How to Use in Code
 
