@@ -95,14 +95,17 @@ def solver(state):
     n_states = []
     for phase in range(2):
         min_ln = states[0][0]
+        min_depth = 13
         for ln, state_idxes, pre_solution in states:
             if ln > min_ln:
                 break
             state_idx = state_idxes[phase]
-            for depth in range(13):
+            for depth in range(min_depth):
                 phase_solution = []
                 solutions = search_phase01(phase, depth, state_idx, 0)
                 if solutions:
+                    if depth + 1 < min_depth:
+                        min_depth = depth + 1
                     break
             for solution in solutions:
                 n_state = idx2state(state_idxes[0], state_idxes[1], state_idxes[2])
@@ -115,9 +118,10 @@ def solver(state):
         states.sort()
         n_states = []
         print(phase, len(states), len(states[0][2]))
-    
+
     phase = 2
     min_ln = states[0][0]
+    min_depth = 13
     for ln, state_idxes, pre_solution in states:
         if ln > min_ln:
             break
@@ -125,6 +129,8 @@ def solver(state):
         for depth in range(13):
             solutions = search_phase2(depth, state, 0)
             if solutions:
+                if depth < min_depth:
+                    min_depth = depth
                 break
         for solution in solutions:
             n_solution = [[i for i in j] for j in pre_solution]
@@ -159,3 +165,7 @@ with open('cross_trans.csv', mode='r') as f:
     for line in map(str.strip, f):
         cross_trans.append([int(i) for i in line.replace('\n', '').split(',')])
 print('solver initialized')
+
+
+tmp = solver([5, 0, 11, 10, 1, 0, 2, 3, 10, 3, 7, 4, 1, 0])
+print(len(tmp), ' / '.join(tmp))
