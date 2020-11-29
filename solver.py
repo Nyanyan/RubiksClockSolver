@@ -30,9 +30,8 @@ def distance_phase01(state_idx):
     return cross_cost[state_idx]
 
 # Return distances from solved state
-def distance_phase2(state):
-    _, _, corner_idx = state2idx(state)
-    return corner_cost[corner_idx]
+def distance_phase2(state_idx):
+    return corner_cost[state_idx]
 
 def move_idx(phase, state_idx, pin_num, twist):
     idx = pins_num_candidate[phase].index(pin_num)
@@ -63,24 +62,36 @@ def search_phase01(phase, depth, state_idx, strt_idx):
     return solved_solution
 
 # Search the phase solution in phase2
-def search_phase2(depth, state, strt_idx):
+def search_phase2(depth, state_idx, strt_idx):
     global phase_solution
     phase = 2
     solved_solution = []
-    dis = distance_phase2(state)
+    dis = distance_phase2(state_idx)
     n_depth = depth - 1
-    for idx, pin_num in enumerate(pins_num_candidate[phase][strt_idx:]):
-        n_strt_idx = strt_idx + idx + 1
+    lower_idx = state_idx % 12
+    state_idx //= 12
+    upper_idx = state_idx % 12
+    state_idx //= 12
+    for pin_idx, pin_num in enumerate(pins_num_candidate[phase][strt_idx:]):
+        n_strt_idx = strt_idx + pin_idx + 1
         for twist in range(1, 12):
-            n_state = move(state, pin_num, twist)
-            n_dis = distance_phase2(n_state)
+            n_upper_idx = upper_idx
+            n_lower_idx = lower_idx
+            if pins_candidate[pin_num][1]:
+                n_upper_idx += twist
+                n_upper_idx %= 12
+            else:
+                n_lower_idx -= twist
+                n_lower_idx %= 12
+            n_state_idx = corner_trans[state_idx][pin_idx * 11 + twist - 1] * 144 + n_upper_idx * 12 + n_lower_idx
+            n_dis = distance_phase2(n_state_idx)
             if n_dis >= dis:
                 continue
             phase_solution.append([pin_num, twist])
             if n_dis == 0:
                 return [[[i for i in j] for j in phase_solution]]
             elif n_dis <= n_depth:
-                tmp = search_phase2(n_depth, n_state, n_strt_idx)
+                tmp = search_phase2(n_depth, n_state_idx, n_strt_idx)
                 if tmp:
                     return tmp
             phase_solution.pop()
@@ -95,7 +106,7 @@ def solver(problem_state):
     n_states = []
     for phase in range(2):
         min_ln = states[0][0]
-        min_depth = 13
+        min_depth = 6
         for ln, state_idxes, pre_solution in states:
             if ln > min_ln:
                 break
@@ -104,8 +115,8 @@ def solver(problem_state):
                 phase_solution = []
                 solutions = search_phase01(phase, depth, state_idx, 0)
                 if solutions:
-                    if depth + 1 < min_depth:
-                        min_depth = depth + 1
+                    if depth + 2 < min_depth:
+                        min_depth = depth + 2
                     break
             for solution in solutions:
                 n_state = idx2state(state_idxes[0], state_idxes[1], state_idxes[2])
@@ -123,17 +134,16 @@ def solver(problem_state):
         states = deepcopy(n_states)
         states.sort()
         n_states = []
-        #print(phase, len(states), len(states[0][2]))
+        print(phase, len(states), len(states[0][2]))
 
     phase = 2
     min_ln = states[0][0]
-    min_depth = 13
+    min_depth = 6
     for ln, state_idxes, pre_solution in states:
         if ln > min_ln:
             break
-        state = idx2state(state_idxes[0], state_idxes[1], state_idxes[2])
         for depth in range(13):
-            solutions = search_phase2(depth, state, 0)
+            solutions = search_phase2(depth, state_idxes[2], 0)
             if solutions:
                 if depth < min_depth:
                     min_depth = depth
@@ -142,12 +152,12 @@ def solver(problem_state):
             n_solution = [[i for i in j] for j in pre_solution]
             n_solution.extend(solution)
             n_states.append([len(n_solution), n_solution])
-    #print(phase, len(n_states), len(n_states[0][1]))
+    print(phase, len(n_states), len(n_states[0][1]))
     
     n_states.sort()
     chosen_solution = n_states[0][1]
     #print(chosen_solution)
-    chosen_solution.sort()
+    #chosen_solution.sort()
     chosen_solution_notation = [[pins_candidate[i[0]][0], pins_candidate[i[0]][1], i[1]] for i in chosen_solution]
     for i, arr in enumerate(chosen_solution_notation):
         pins, ud, twist = arr
@@ -170,8 +180,13 @@ cross_trans = []
 with open('cross_trans.csv', mode='r') as f:
     for line in map(str.strip, f):
         cross_trans.append([int(i) for i in line.replace('\n', '').split(',')])
+corner_trans = []
+with open('corner_trans.csv', mode='r') as f:
+    for line in map(str.strip, f):
+        corner_trans.append([int(i) for i in line.replace('\n', '').split(',')])
 print('solver initialized')
 
 
-tmp = solver([5, 0, 11, 10, 1, 0, 2, 3, 10, 3, 7, 4, 1, 0])
-print(len(tmp), ' / '.join(tmp))
+''' TEST '''
+tmp = solver([6, 3, 10, 10, 6, 1, 5, 2, 7, 6, 3, 5, 7, 4]) #UR3- DR3- DL2+ UL3+ U1+ R4- D0+ L5+ ALL4+ y2 U4+ R5- D4+ L0+ ALL5- UR DL
+print(len(tmp), 'moves', ' / '.join(tmp))

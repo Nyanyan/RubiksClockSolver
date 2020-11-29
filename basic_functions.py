@@ -70,7 +70,8 @@ pins_candidate = [
     [[True, True, True, True], 1]
     ]
 
-pins_num_candidate = [[9, 11, 17, 19, 21, 23, 25, 27], [20, 12, 18, 10, 6, 8, 2, 4], [0, 1, 3, 5, 7, 13, 15, 14, 15, 22, 24, 26, 28, 29]]
+pins_num_candidate = [[9, 11, 17, 19, 21, 23, 25, 27], [20, 12, 18, 10, 6, 8, 2, 4], [0, 1, 3, 5, 7, 13, 14, 15, 16, 22, 24, 26, 28, 29]]
+
 set_pins_num_candidate = [set(i) for i in pins_num_candidate]
 
 print('basic functions initialized')
