@@ -3,6 +3,16 @@ Rubik's Clock Solver written in Python
 
 ## Usage
 
+### Set up
+
+```
+$ python create_array.py
+```
+
+Please wait few minutes.
+
+### How to Use in Code
+
 Sample code:
 
 ```python
@@ -50,4 +60,5 @@ The second character means which face to rotate. ```U``` means upper face, ```d`
 
 The following number is how many times to rotate. ```+3``` means 90 degrees clockwise, ```-1``` means 30 degrees counterclockwise.
 
-For example, ```Uddd U 6``` means ```UL 6+``` shortly in WCA scramble.
+For example, ```Uddd U 6``` means ```UL 6+```, and ```dUUU d 3``` means ```y2 UR 3-``` shortly in WCA scramble.
+
