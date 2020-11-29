@@ -27,9 +27,9 @@ def move(state, num, twist):
     return res
 
 def state2idx(state):
-    state_upper = [state[i] for i in [0, 1, 2, 3, 4]]
-    state_lower = [state[i] for i in [9, 10, 11, 12, 13]]
-    state_corner = [state[i] for i in [5, 6, 7, 8]]
+    state_upper = [state[i] for i in (0, 1, 2, 3, 4)]
+    state_lower = [state[i] for i in (9, 10, 11, 12, 13)]
+    state_corner = [state[i] for i in (5, 6, 7, 8)]
     res_upper = 0
     for i in range(5):
         res_upper *= 12
@@ -50,13 +50,14 @@ def state2idx(state):
 
 def idx2state(idx_lower, idx_upper, idx_corner):
     res = [-1 for _ in range(14)]
-    for i in [4, 3, 2, 1, 0]:
+    for i in (4, 3, 2, 1, 0):
         res[i] = idx_upper % 12
         idx_upper //= 12
-    for i in [13, 12, 11, 10, 9]:
+    for i in (13, 12, 11, 10, 9):
         res[i] = idx_lower % 12
         idx_lower //= 12
-    for i in [5, 6, 7, 8]:
+    idx_corner //= 12 ** 2
+    for i in (8, 7, 6, 5):
         res[i] = idx_corner % 12
         idx_corner //= 12
     return res
@@ -69,46 +70,7 @@ pins_candidate = [
     [[True, True, True, True], 1]
     ]
 
-pins_num_candidate = [[9, 11, 17, 19, 21, 23, 25, 27], [20, 18, 12, 10, 8, 6, 4, 2], [2, 4, 6, 8, 10, 12, 18, 20], [0, 1, 3, 5, 7, 13, 15, 14, 15, 22, 24, 26, 28, 29]]
+pins_num_candidate = [[9, 11, 17, 19, 21, 23, 25, 27], [20, 12, 18, 10, 6, 8, 2, 4], [0, 1, 3, 5, 7, 13, 15, 14, 15, 22, 24, 26, 28, 29]]
 set_pins_num_candidate = [set(i) for i in pins_num_candidate]
 
 print('basic functions initialized')
-
-'''
-pins_candidate_phase = [
-    [[[True, True, False, False], 0], [[True, False, True, False], 0], [[False, True, False, True], 0], [[False, False, True, True], 0], [[True, True, True, False], 0], [[True, True, False, True], 0], [[True, False, True, True], 0], [[False, True, True, True], 0]],
-    [[[True, False, False, False], 1], [[False, True, False, False], 1], [[False, False, True, False], 1], [[False, False, False, True], 1], [[True, True, False, False], 1], [[True, False, True, False], 1], [[False, True, False, True], 1], [[False, False, True, True], 1]],
-    [
-        [[False, False, False, False], 0], [[True, False, False, False], 0], [[False, True, False, False], 0], [[False, False, True, False], 0], [[False, False, False, True], 0], [[True, False, False, True], 0], [[False, True, True, False], 0],
-        [[True, False, False, True], 1], [[False, True, True, False], 0], [[True, True, True, False], 1], [[True, True, False, True], 1], [[True, False, True, True], 1], [[False, True, True, True], 1], [[True, True, True, True], 1]
-    ]
-    ]
-pins_num_candidate = [[], [], []]
-for phase in range(3):
-    for pins in pins_candidate_phase[phase]:
-        pins_num_candidate[phase].append(pins_candidate.index(pins))
-
-print(pins_num_candidate)
-'''
-'''
-direction = [0, 1, 0]
-for phase in range(3):
-    for i in range(len(pins_candidate[phase])):
-        pins_candidate[phase][i] = [pins_candidate[phase][i], direction[phase]]
-for i in range(3):
-    print(pins_candidate[i])
-'''
-'''
-from itertools import combinations
-combs = []
-for i in range(5):
-    combs.append([j for j in combinations(range(4), i)])
-
-pins_up_candidate = [[2, 3], [1, 2], [0, 1, 2, 3, 4]]
-pins_candidate = []
-for num_of_pins in range(5):
-    for pins_up in combs[num_of_pins]:
-        for direction in range(2):
-            pins_candidate.append([[True if i in pins_up else False for i in range(4)], direction])
-print(pins_candidate)
-'''

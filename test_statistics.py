@@ -14,7 +14,7 @@ for i in range(num):
         f.write(str(test_cube) + '\n')
     res = solver(test_cube)
     tim = time() - strt
-    #print(i, len(res), 'moves', tim, 'sec')
+    print(i, len(res), 'moves', tim, 'sec')
     tims.append(tim)
     lens.append(len(res))
     scrambles.append(test_cube)

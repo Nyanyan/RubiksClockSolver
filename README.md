@@ -20,15 +20,15 @@ print(' / '.join(solution))
 
 ```
 clock numbering:
-upper face
- 0  1  2
- 3  4  5
- 6  7  8
+upper
+ 5  0  6
+ 1  2  3
+ 7  4  8
 
-lower face
- 2  9  0
+lower
+ 6  9  5
 10 11 12
- 8 13  6
+ 8 13  7
 
 solved state: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 ```
@@ -43,6 +43,8 @@ upper face
 0 1
 2 3
 ```
+
+```U``` means the pin is pulled, ```d``` means pushed.
 
 The second character means which face to rotate. ```U``` means upper face, ```d``` means the lower face.
 
