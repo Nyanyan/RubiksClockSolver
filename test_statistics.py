@@ -23,6 +23,7 @@ print(cnt, '/', num)
 print('avg', sum(tims) / cnt, 'sec', 'max', max(tims), 'sec')
 print('avg', sum(lens) / cnt, 'moves', 'max', max(lens), 'moves')
 print('longest time scramble', scrambles[tims.index(max(tims))])
+print('longest solution scramble', scrambles[lens.index(max(lens))])
 
 s = '''0                     1
 1                   330

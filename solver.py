@@ -109,11 +109,8 @@ def solver(problem_state):
     states = [[0, state2idx(problem_state), []]]
     n_states = []
     for phase in range(2):
-        min_ln = states[0][0]
         min_depth = 7
         for ln, state_idxes, pre_solution in states:
-            if ln > min_ln:
-                break
             state_idx = state_idxes[phase]
             solutions = []
             for depth in range(min_depth):
@@ -193,7 +190,7 @@ print('solver initialized')
 
 
 ''' TEST
-tmp = solver([6, 3, 10, 10, 6, 1, 5, 2, 7, 6, 3, 5, 7, 4]) #UR3- DR3- DL2+ UL3+ U1+ R4- D0+ L5+ ALL4+ y2 U4+ R5- D4+ L0+ ALL5- UR DL
+#tmp = solver([6, 3, 10, 10, 6, 1, 5, 2, 7, 6, 3, 5, 7, 4]) #UR3- DR3- DL2+ UL3+ U1+ R4- D0+ L5+ ALL4+ y2 U4+ R5- D4+ L0+ ALL5- UR DL
 #tmp = solver([10, 1, 7, 9, 3, 2, 2, 5, 8, 9, 6, 8, 1, 6]) # UR5+ DR3+ DL0+ UL5+ U4+ R6+ D4- L2+ ALL1- y2 U4+ R6+ D3- L2- ALL2+ DR
 print(len(tmp), 'moves', ' / '.join(tmp))
 '''
