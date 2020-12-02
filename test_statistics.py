@@ -1,6 +1,10 @@
 from time import time
 from random import randint
+import matplotlib.pyplot as plt
+import numpy as np
+from math import sqrt
 from solver import solver
+
 
 tims = []
 lens = []
@@ -21,7 +25,8 @@ for i in range(num):
     cnt += 1
 print(cnt, '/', num)
 print('avg', sum(tims) / cnt, 'sec', 'max', max(tims), 'sec')
-print('avg', sum(lens) / cnt, 'moves', 'max', max(lens), 'moves')
+avg_solver = sum(lens) / cnt
+print('avg', avg_solver, 'moves', 'max', max(lens), 'moves')
 print('longest time scramble', scrambles[tims.index(max(tims))])
 print('longest solution scramble', scrambles[lens.index(max(lens))])
 
@@ -46,3 +51,13 @@ for i, j in a:
     al += j
 sm /= al
 print('if optimally solved, average may be', sm)
+
+all_scrrambles = 12 ** 14
+width = 0.25
+margin = 0.2
+ind = np.arange(13) * (width * 2 + margin)
+plt.bar(ind, [a[i][1] / all_scrrambles for i in range(13)], width, label='optimal solution')
+plt.bar(ind + width, [lens.count(i) / cnt for i in range(13)], width, label="this solver's solution")
+plt.xticks(ind + width / 2, range(13))
+plt.legend()
+plt.show()
