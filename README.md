@@ -18,13 +18,13 @@ Sample code:
 ```python
 from solver import solver
 # Please wait few seconds before initialized
-scrambled_cube = [11, 8, 6, 3, 3, 10, 4, 9, 8, 9, 3, 10, 3, 9]
+scrambled_cube = [8, 3, 3, 10, 9, 11, 6, 4, 8, 9, 3, 10, 3, 9]
 # WCA scramble for this cube: UR6+ DR5- DL5- UL3+ U4+ R6+ D1- L3- ALL5+ y2 U6+ R0+ D5- L5+ ALL3- DR
 solution = solver(scrambled_cube)
 print(solution)
-# ['Uddd U -3', 'dUdd d 6', 'dddU U 2', 'UddU d 2', 'ddUU U 3', 'UUUd d 1', 'UdUU d 6', 'UdUU U 4', 'dUUU d -5']
+# ['dddd d -4', 'Uddd U 6', 'ddUd U 1', 'ddUU U 4', 'UUUd d -5', 'UUUd U 1', 'UUdU d 6', 'UUdU U -3', 'dUUU d 1']
 print(' / '.join(solution))
-# Uddd U -3 / dUdd d 6 / dddU U 2 / UddU d 2 / ddUU U 3 / UUUd d 1 / UdUU d 6 / UdUU U 4 / dUUU d -5
+# dddd d -4 / Uddd U 6 / ddUd U 1 / ddUU U 4 / UUUd d -5 / UUUd U 1 / UUdU d 6 / UUdU U -3 / dUUU d 1
 ```
 
 ```scrambled_cube``` is the scramble. Each index is related to each clock. Details:
